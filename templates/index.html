@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Entradas</title>
+</head>
+<body>
+    <div id="entradas"></div>
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        function EntradasList() {
+            const [ultimasEntradas, setUltimasEntradas] = React.useState([]);
+
+            React.useEffect(() => {
+                fetchUltimasEntradas();
+            }, []);
+
+            async function fetchUltimasEntradas() {
+                try {
+                    const response = await axios.get('/ultimas_entradas');
+                    setUltimasEntradas(response.data);
+                } catch (error) {
+                    console.error('Failed to fetch últimas entradas:', error);
+                }
+            }
+
+            return (
+                <div>
+                    <h1>Últimas Entradas</h1>
+                    <ul>
+                        {ultimasEntradas.map((entrada, index) => (
+                            <li key={index}>
+                                {entrada.nome_mercadoria} - {entrada.quantidade} - {entrada.data_hora} - {entrada.local}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<EntradasList />, document.getElementById('entradas'));
+    </script>
+</body>
+</html>
